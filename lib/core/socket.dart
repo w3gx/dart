@@ -20,7 +20,7 @@ class W3GSocket<T> {
       _channel?.stream.listen((message) {
         response = parse(message) as T?;
         for (var listener in _listeners) {
-          listen(listener, response);
+          _process(listener, response);
         }
       });
     }
@@ -31,7 +31,11 @@ class W3GSocket<T> {
     channel.sink.add(stringify(data));
   }
 
-  void listen(Function(T?) listener, T? response) {
+  void _process(Function(T?) listener, T? response) {
     listener(response);
+  }
+
+  void listen(Function(T?) listener) {
+    _listeners.add(listener);
   }
 }
