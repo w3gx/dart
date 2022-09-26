@@ -1,7 +1,5 @@
 library w3gx_dart;
 
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+import 'package:w3gx_dart/core/core.dart';
+
+W3Gx w3gx = W3Gx.shared;
