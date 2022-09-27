@@ -2,9 +2,7 @@ part of 'core.dart';
 
 class W3GSocket<T> {
   late String uri;
-
   final Map<String, Function(T)> _listeners = {};
-
   WebSocketChannel? _channel;
 
   W3GSocket({required this.uri});
@@ -19,15 +17,22 @@ class W3GSocket<T> {
         _uri,
       );
       _channel!.stream.listen((message) {
-        T response = parse(message) as T;
         _listeners.forEach((key, callback) {
-          _process(key, callback, response);
+          _process(key, callback, _parse(message));
         });
       });
     }
     return _channel!;
   }
 
+  /// add event listener
+  ///
+  /// triggers [listener] for [event] streams
+  void on(String event, Function(T) listener) {
+    _listeners[event] = listener;
+  }
+
+  /// send [data] to the server
   void send(dynamic data) {
     channel.sink.add(stringify(data));
   }
@@ -36,7 +41,7 @@ class W3GSocket<T> {
     listener(response); // default handler
   }
 
-  void on(String event, Function(T) listener) {
-    _listeners[event] = listener;
+  T _parse(dynamic msg) {
+    return parse(msg) as T;
   }
 }

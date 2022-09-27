@@ -32,6 +32,15 @@ class W3Gx extends W3GSocket<W3GResponse> {
     send({"path": "disconnect"});
   }
 
+  Map<String, dynamic> _buildWithSessionId(Map<String, dynamic> data) {
+    if (!data.containsKey("message")) {
+      data = {...data, "message": {}};
+    }
+    sessionId = (data["message"]["sessionId"] ??= _uuid.v4());
+
+    return data;
+  }
+
   /// allows sending [data] to w3gx servers.
   @override
   void send(dynamic data) {
@@ -53,12 +62,8 @@ class W3Gx extends W3GSocket<W3GResponse> {
     }
   }
 
-  Map<String, dynamic> _buildWithSessionId(Map<String, dynamic> data) {
-    if (!data.containsKey("message")) {
-      data = {...data, "message": {}};
-    }
-    sessionId = (data["message"]["sessionId"] ??= _uuid.v4());
-
-    return data;
+  @override
+  W3GResponse _parse(dynamic msg) {
+    return W3GResponse(rawData: msg);
   }
 }
