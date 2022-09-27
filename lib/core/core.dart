@@ -1,17 +1,54 @@
 import 'package:w3gx_dart/utils/json_converter.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:uuid/uuid.dart';
 
 part 'abstracts.dart';
 part 'socket.dart';
 
 /// W3Gx singleton class
 class W3Gx extends W3GSocket<W3GResponse> {
+  Uuid uuid = const Uuid();
+  String? sessionId;
+
   W3Gx._privateConstructor({required super.uri});
 
   static final W3Gx shared =
-      W3Gx._privateConstructor(uri: "ws://w3gx.herokuapp.com");
+      W3Gx._privateConstructor(uri: "ws://localhost:8080/");
 
   Future<void> connect() async {
     send({"path": "connect"});
+  }
+
+  Future<void> disconnect() async {
+    send({"path": "disconnect"});
+  }
+
+  /// allows sending [data] to w3gx servers.
+  @override
+  void send(dynamic data) {
+    if (data is Map<String, dynamic>) {
+      super.send(
+        _buildWithSessionId(data),
+      );
+    } else {
+      throw Exception("W3Gx::send: data must be a Map");
+    }
+  }
+
+  @override
+  void _process(
+      String event, Function(W3GResponse) listener, W3GResponse response) {
+    if (response.path == event) {
+      listener(response);
+    }
+  }
+
+  Map<String, dynamic> _buildWithSessionId(Map<String, dynamic> data) {
+    if (!data.containsKey("message")) {
+      data["message"] = {};
+    }
+    data["message"]["sessionId"] ??= uuid.v4();
+
+    return data;
   }
 }

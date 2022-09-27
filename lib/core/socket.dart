@@ -15,8 +15,10 @@ class W3GSocket<T> {
 
   WebSocketChannel get channel {
     if (_channel == null) {
-      _channel = WebSocketChannel.connect(_uri);
-      _channel?.stream.listen((message) {
+      _channel = WebSocketChannel.connect(
+        _uri,
+      );
+      _channel!.stream.listen((message) {
         T response = parse(message) as T;
         _listeners.forEach((key, callback) {
           _process(key, callback, response);
