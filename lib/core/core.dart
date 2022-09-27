@@ -17,11 +17,18 @@ class W3Gx extends W3GSocket<W3GResponse> {
   static final W3Gx shared = W3Gx._(uri: "wss://w3gx.herokuapp.com");
 
   /// opens a connection to the server
-  Future<void> connect() async {
+  ///
+  /// [onConnect] is called once there's a connect response from the server
+  Future<void> connect(Function(W3GResponse) onConnect) async {
+    on("connect", onConnect);
     send({"path": "connect"});
   }
 
-  Future<void> disconnect() async {
+  /// prompts the server to disconnect the wallet
+  ///
+  /// [onDisconnect] is called once there's a disconnect response from the server
+  Future<void> disconnect(Function(W3GResponse) onDisconnect) async {
+    on("disconnect", onDisconnect);
     send({"path": "disconnect"});
   }
 
@@ -40,6 +47,7 @@ class W3Gx extends W3GSocket<W3GResponse> {
   @override
   void _process(
       String event, Function(W3GResponse) listener, W3GResponse response) {
+    // ensure the path matches
     if (response.path == event && response.message.sessionId == sessionId) {
       listener(response);
     }

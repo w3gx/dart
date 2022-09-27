@@ -6,6 +6,7 @@ abstract class W3GMessage {
   late Map<String, dynamic> data;
 }
 
+/// Received data from the server
 abstract class W3GResponse {
   late String path;
   late W3GMessage message;
