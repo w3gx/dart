@@ -55,7 +55,7 @@ class W3Gx extends W3GSocket<W3GResponse> {
 
   Map<String, dynamic> _buildWithSessionId(Map<String, dynamic> data) {
     if (!data.containsKey("message")) {
-      data["message"] = {};
+      data = {...data, "message": {}};
     }
     sessionId = (data["message"]["sessionId"] ??= _uuid.v4());
 
