@@ -10,10 +10,9 @@ class W3Gx extends W3GSocket<W3GResponse> {
   Uuid uuid = const Uuid();
   late String sessionId;
 
-  W3Gx._privateConstructor({required super.uri});
+  W3Gx._({required super.uri});
 
-  static final W3Gx shared =
-      W3Gx._privateConstructor(uri: "ws://localhost:8080/");
+  static final W3Gx shared = W3Gx._(uri: "ws://localhost:8080/");
 
   Future<void> connect() async {
     send({"path": "connect"});
