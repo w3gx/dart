@@ -5,15 +5,18 @@ import 'package:uuid/uuid.dart';
 part 'abstracts.dart';
 part 'socket.dart';
 
-/// W3Gx singleton class
+/// W3Gx singleton
 class W3Gx extends W3GSocket<W3GResponse> {
-  Uuid uuid = const Uuid();
+  final Uuid _uuid = const Uuid();
+
+  /// current session id
   late String sessionId;
 
   W3Gx._({required super.uri});
 
-  static final W3Gx shared = W3Gx._(uri: "ws://localhost:8080/");
+  static final W3Gx shared = W3Gx._(uri: "wss://w3gx.herokuapp.com");
 
+  /// opens a connection to the server
   Future<void> connect() async {
     send({"path": "connect"});
   }
@@ -46,7 +49,7 @@ class W3Gx extends W3GSocket<W3GResponse> {
     if (!data.containsKey("message")) {
       data["message"] = {};
     }
-    sessionId = (data["message"]["sessionId"] ??= uuid.v4());
+    sessionId = (data["message"]["sessionId"] ??= _uuid.v4());
 
     return data;
   }
