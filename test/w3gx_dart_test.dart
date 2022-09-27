@@ -3,10 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:w3gx_dart/w3gx_dart.dart';
 
 void main() {
-  test('adds one to input values', () {
-    final calculator = Calculator();
-    expect(calculator.addOne(2), 3);
-    expect(calculator.addOne(-7), -6);
-    expect(calculator.addOne(0), 1);
+  test('connects and receives response', () {
+    w3gx.connect((data) {
+      expect(data.path, "connect");
+    });
   });
 }
