@@ -8,7 +8,7 @@ part 'socket.dart';
 /// W3Gx singleton class
 class W3Gx extends W3GSocket<W3GResponse> {
   Uuid uuid = const Uuid();
-  String? sessionId;
+  late String sessionId;
 
   W3Gx._privateConstructor({required super.uri});
 
@@ -38,7 +38,7 @@ class W3Gx extends W3GSocket<W3GResponse> {
   @override
   void _process(
       String event, Function(W3GResponse) listener, W3GResponse response) {
-    if (response.path == event) {
+    if (response.path == event && response.message.sessionId == sessionId) {
       listener(response);
     }
   }
@@ -47,7 +47,7 @@ class W3Gx extends W3GSocket<W3GResponse> {
     if (!data.containsKey("message")) {
       data["message"] = {};
     }
-    data["message"]["sessionId"] ??= uuid.v4();
+    sessionId = (data["message"]["sessionId"] ??= uuid.v4());
 
     return data;
   }
