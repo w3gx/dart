@@ -1,6 +1,6 @@
 name: w3gx_dart
-description: w3gx dart client
-version: 0.0.1
+description: w3gx dart client for connecting to wallets and interacting with smart contracts
+version: 0.0.2
 homepage: https://elcharitas.dev
 repository: https://github.com/w3gx/dart
 
